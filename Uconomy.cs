@@ -1,5 +1,7 @@
 ﻿using Rocket;
+using Rocket.API;
 using Rocket.API.Collections;
+using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
@@ -16,8 +18,10 @@ namespace fr34kyn01535.Uconomy
         public DatabaseManager Database;
         public static Uconomy Instance;
 
-        protected override void Load()
+        public override void LoadPlugin()
         {
+            base.LoadPlugin();
+            Logger.Log("Fixed by Fanya: https://plugins.fanyplay.ru");
             Instance = this;
             Database = new DatabaseManager();
             U.Events.OnPlayerConnected+=Events_OnPlayerConnected;
@@ -50,8 +54,7 @@ namespace fr34kyn01535.Uconomy
 
         internal void HasBeenPayed(UnturnedPlayer sender, UnturnedPlayer receiver, decimal amt)
         {
-            if (OnPlayerPay != null)
-                OnPlayerPay(sender, receiver, amt);
+            OnPlayerPay?.Invoke(sender, receiver, amt);
         }
 
         internal void BalanceUpdated(string SteamID, decimal amt)
@@ -76,6 +79,12 @@ namespace fr34kyn01535.Uconomy
         {
            //setup account
             Database.CheckSetupAccount(player.CSteamID);
+        }
+
+        public override void UnloadPlugin(PluginState PluginState = PluginState.Unloaded)
+        {
+            Instance = null;
+            base.UnloadPlugin(PluginState);
         }
     }
 }

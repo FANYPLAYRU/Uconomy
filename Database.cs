@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿
+
+using MySql.Data.MySqlClient;
 using Rocket.Core.Logging;
 using System;
 
@@ -8,11 +10,11 @@ namespace fr34kyn01535.Uconomy
     {
         internal DatabaseManager()
         {
-            new I18N.West.CP1250(); //Workaround for database encoding issues with mono
+            //new I18N.West.CP1250(); //Workaround for database encoding issues with mono
             CheckSchema();
         }
 
-        private MySqlConnection createConnection()
+        private MySqlConnection CreateConnection()
         {
             MySqlConnection connection = null;
             try
@@ -37,7 +39,7 @@ namespace fr34kyn01535.Uconomy
             decimal output = 0;
             try
             {
-                MySqlConnection connection = createConnection();
+                MySqlConnection connection = CreateConnection();
                 MySqlCommand command = connection.CreateCommand();
                 command.CommandText = "select `balance` from `" + Uconomy.Instance.Configuration.Instance.DatabaseTableName + "` where `steamId` = '" + id.ToString() + "';";
                 connection.Open();
@@ -64,7 +66,7 @@ namespace fr34kyn01535.Uconomy
             decimal output = 0;
             try
             {
-                MySqlConnection connection = createConnection();
+                MySqlConnection connection = CreateConnection();
                 MySqlCommand command = connection.CreateCommand();
                 command.CommandText = "update `" + Uconomy.Instance.Configuration.Instance.DatabaseTableName + "` set `balance` = balance + (" + increaseBy + ") where `steamId` = '" + id.ToString() + "'; select `balance` from `" + Uconomy.Instance.Configuration.Instance.DatabaseTableName + "` where `steamId` = '" + id.ToString() + "'";
                 connection.Open();
@@ -85,7 +87,7 @@ namespace fr34kyn01535.Uconomy
         {
             try
             {
-                MySqlConnection connection = createConnection();
+                MySqlConnection connection = CreateConnection();
                 MySqlCommand command = connection.CreateCommand();
                 int exists = 0;
                 command.CommandText = "SELECT EXISTS(SELECT 1 FROM `" + Uconomy.Instance.Configuration.Instance.DatabaseTableName + "` WHERE `steamId` ='" + id + "' LIMIT 1);";
@@ -113,7 +115,7 @@ namespace fr34kyn01535.Uconomy
         {
             try
             {
-                MySqlConnection connection = createConnection();
+                MySqlConnection connection = CreateConnection();
                 MySqlCommand command = connection.CreateCommand();
                 command.CommandText = "show tables like '" + Uconomy.Instance.Configuration.Instance.DatabaseTableName + "'";
                 connection.Open();
